@@ -8,7 +8,13 @@ const checker = require('istanbul-threshold-checker');
 const checkCoverage = require('./lib').checkCoverage;
 const chokidar = require('chokidar');
 
-let reportFinished = function () { };
+let reportFinished = function () {
+
+  // Reassign `onExit` to just call `done` since we are done here
+  this.onExit = function (done) {
+    done();
+  };
+};
 
 var KarmaIstanbulThresholdReporter = function (baseReporterDecorator, config) {
   // extend the base reporter
@@ -16,8 +22,8 @@ var KarmaIstanbulThresholdReporter = function (baseReporterDecorator, config) {
   var self = this;
   self.skip = false;
 
-  config.remappedCoverageReporter = config.remappedCoverageReporter || {};
-  _.defaults(config.remappedCoverageReporter, {
+  config.istanbulThresholdReporter = config.istanbulThresholdReporter || {};
+  _.defaults(config.istanbulThresholdReporter, {
     src: null,
     basePath: null,
     thresholds: {
@@ -40,24 +46,19 @@ var KarmaIstanbulThresholdReporter = function (baseReporterDecorator, config) {
   chalk.enabled = config.colors !== false;
 
   self.parseResults = function () {
-    const json = JSON.parse(fs.readFileSync(config.remappedCoverageReporter.src, 'utf8'));
+    const json = JSON.parse(fs.readFileSync(config.istanbulThresholdReporter.src, 'utf8'));
     self.write('\n');
     const exitCode = checkCoverage(
       json,
-      config.remappedCoverageReporter.thresholds,
+      config.istanbulThresholdReporter.thresholds,
       self.write.bind(self),
-      config.remappedCoverageReporter.basePath
+      config.istanbulThresholdReporter.basePath
     );
     self.write('\n');
 
     if (exitCode) {
       process.exit(exitCode);
     }
-
-    // Reassign `onExit` to just call `done` since we are done here
-    this.onExit = function (done) {
-      done();
-    };
 
     reportFinished();
   };
@@ -66,11 +67,12 @@ var KarmaIstanbulThresholdReporter = function (baseReporterDecorator, config) {
     if (results.exitCode) {
       return;
     }
-    if (!config.remappedCoverageReporter.src) {
-      self.write('\n' + chalk.reset('remapped-coverage: no src set.' +
-          ' Skipping coverage test') + '\n');
+    if (!config.istanbulThresholdReporter.src) {
+      self.write('\n' + chalk.reset('istanbul-threshold: no src set.' +
+          ' Skipping threshold test') + '\n');
+      reportFinished();
     } else {
-      var watcher = chokidar.watch(config.remappedCoverageReporter.src);
+      var watcher = chokidar.watch(config.istanbulThresholdReporter.src);
 
       watcher.on('add', (path, stats) => {
         watcher.close();
