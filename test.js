@@ -33,16 +33,61 @@ var testThresholds = {
 
 let logs;
 const testLog = function (msg) {
-  console.log(msg);
+  //console.log(msg);
   logs.push(msg);
 };
 
 describe('karma-remapped-coverage-reporter', function() {
   describe('checkCoverage()', function() {
+
     it('should work', function() {
       logs = [];
-      expect(true).to.equal(true);
       checkCoverage(testJson, testThresholds, testLog, testBasePath);
+      expect(logs.length).to.equal(13);
+    });
+
+    it('should return 0 on success', function() {
+      logs = [];
+      const easyThresholds = {
+        global: {
+          statements: 0,
+          branches: 0,
+          lines: 0,
+          functions: 0
+        },
+        each: {
+          statements: 0,
+          branches: 0,
+          lines: 0,
+          functions: 0
+        }
+      };
+      logs = [];
+      const result = checkCoverage(testJson, easyThresholds, testLog, testBasePath);
+      expect(result).to.equal(0);
+      expect(logs.length).to.equal(0);
+    });
+
+    it('should return 1 on failure', function() {
+      logs = [];
+      const hardThresholds = {
+        global: {
+          statements: 100,
+          branches: 100,
+          lines: 0,
+          functions: 0,
+        },
+        each: {
+          statements: 0,
+          branches: 0,
+          lines: 0,
+          functions: 100,
+        }
+      };
+      logs = [];
+      const result = checkCoverage(testJson, hardThresholds, testLog, testBasePath);
+      expect(result).to.equal(1);
+      expect(logs.length).to.equal(7);
     });
   });
 });
