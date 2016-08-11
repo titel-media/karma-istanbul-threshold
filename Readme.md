@@ -65,17 +65,20 @@ Add the plugin, reporter and reporter configuration in your `karma.conf.js`.
   },
   plugins: ['karma-remap-istanbul', 'karma-coverage', 'karma-istanbul-threshold'],
   reporters: ['progress', 'coverage', 'karma-remap-istanbul', 'istanbul-threshold'],
+  // Creates coverage reports and stores as json
   coverageReporter: {
     reporters: [
       { type: 'json', dir: 'tmp/coverage', subdir: '.', file: 'coverage-unmapped.json' }
     ],
-  },  
+  },
+  // Creates a source-mapped version of coverage report  
   remapIstanbulReporter: {
     src: 'tmp/coverage/coverage-unmapped.json',
     reports: {
       'json': 'tmp/coverage/coverage-mapped.json'
     },
   },
+  // Uses source-mapped version to check coverage thresholds
   istanbulThresholdReporter: {
     src: 'tmp/coverage/coverage-mapped.json',
     basePath: path.resolve(__dirname, 'path/to/source'),
