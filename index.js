@@ -8,14 +8,6 @@ const checker = require('istanbul-threshold-checker');
 const checkCoverage = require('./lib').checkCoverage;
 const chokidar = require('chokidar');
 
-let reportFinished = function () {
-
-  // Reassign `onExit` to just call `done` since we are done here
-  this.onExit = function (done) {
-    done();
-  };
-};
-
 var KarmaIstanbulThresholdReporter = function (baseReporterDecorator, config) {
   // extend the base reporter
   baseReporterDecorator(this);
@@ -45,6 +37,13 @@ var KarmaIstanbulThresholdReporter = function (baseReporterDecorator, config) {
   // disable chalk when colors is set to false
   chalk.enabled = config.colors !== false;
 
+  self.reportFinished = function () {
+    // Reassign `onExit` to just call `done` since we are done here
+    self.onExit = function (done) {
+      done();
+    };
+  };
+
   self.parseResults = function () {
     const json = JSON.parse(fs.readFileSync(config.istanbulThresholdReporter.src, 'utf8'));
     self.write('\n');
@@ -60,17 +59,18 @@ var KarmaIstanbulThresholdReporter = function (baseReporterDecorator, config) {
       process.exit(exitCode);
     }
 
-    reportFinished();
+    self.reportFinished();
   };
 
   self.onRunComplete = function (browsers, results) {
     if (results.exitCode) {
+      self.reportFinished();
       return;
     }
     if (!config.istanbulThresholdReporter.src) {
       self.write('\n' + chalk.reset('istanbul-threshold: no src set.' +
           ' Skipping threshold test') + '\n');
-      reportFinished();
+      self.reportFinished();
     } else {
       var watcher = chokidar.watch(config.istanbulThresholdReporter.src);
 
@@ -82,13 +82,13 @@ var KarmaIstanbulThresholdReporter = function (baseReporterDecorator, config) {
       setTimeout(function () {
         self.write(chalk.red('\nWaiting for remapped coverage source timed out…\n'));
         watcher.close();
-        reportFinished();
+        self.reportFinished();
       }, 5000);
     }
   };
 
   self.onExit = function (done) {
-    reportFinished = done;
+    self.reportFinished = done;
   }
 };
 
