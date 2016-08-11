@@ -4,7 +4,6 @@ const chalk = require('chalk');
 const _ = require('lodash');
 const fs = require('fs');
 const istanbul = require('istanbul');
-const checker = require('istanbul-threshold-checker');
 const checkCoverage = require('./lib').checkCoverage;
 const chokidar = require('chokidar');
 
