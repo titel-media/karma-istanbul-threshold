@@ -6,6 +6,19 @@
   "scripts": {
     "test": "mocha test.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/titel-media/karma-istanbul-threshold.git"
+  },
+  "bugs": {
+    "url": "https://github.com/titel-media/karma-istanbul-threshold/issues"
+  },
+  "maintainers": [
+    {
+      "name": "Daniel Schäfer",
+      "email": "epegzz@gmail.com"
+    }
+  ],
   "keywords": [
     "karma",
     "coverage",
@@ -14,8 +27,12 @@
     "istanbul",
     "sourcemaps"
   ],
-  "author": "Daniel Schäfer <epegzz@gmail.com>",
+  "author": "dev@highsnobiety.com",
   "license": "ISC",
+  "files": [
+    "index.js",
+    "lib.js"
+  ],
   "dependencies": {
     "chalk": "^1.1.3",
     "chokidar": "^1.6.0",
