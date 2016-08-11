@@ -62,11 +62,7 @@ var KarmaIstanbulThresholdReporter = function (baseReporterDecorator, config) {
     reportFinished();
   };
 
-
-  let $results;
   self.onRunComplete = function (browsers, results) {
-    $results = results;
-    self.write('aa...' + results);
     if (results.exitCode) {
       return;
     }

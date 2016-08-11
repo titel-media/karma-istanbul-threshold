@@ -21,11 +21,11 @@ var testThresholds = {
     statements: 100,
     branches: 90,
     lines: 70,
-    functions: -10
+    functions: 10
   },
   each: {
     statements: 0,
-    branches: -20,
+    branches: 20,
     lines: 60,
     functions: 100
   }
