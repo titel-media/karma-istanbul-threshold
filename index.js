@@ -17,6 +17,7 @@ var KarmaIstanbulThresholdReporter = function (baseReporterDecorator, config) {
   _.defaults(config.istanbulThresholdReporter, {
     src: null,
     basePath: null,
+    reporters: [],
     thresholds: {
       global: {
         statements: 0,
@@ -50,7 +51,8 @@ var KarmaIstanbulThresholdReporter = function (baseReporterDecorator, config) {
       json,
       config.istanbulThresholdReporter.thresholds,
       self.write.bind(self),
-      config.istanbulThresholdReporter.basePath
+      config.istanbulThresholdReporter.basePath,
+      config.istanbulThresholdReporter.reporters
     );
     self.write('\n');
 

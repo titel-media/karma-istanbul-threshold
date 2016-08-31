@@ -6,6 +6,8 @@ const checkCoverage = require('./lib').checkCoverage;
 
 const testBasePath = '/path/to/src';
 
+const reporters = [];
+
 const testJson = {
   "/path/to/src/components/icon/Icon.tsx":{"path":"/path/to/src/components/icon/Icon.tsx","statementMap":{"1":{"start":{"line":1,"column":0},"end":{"line":1,"column":31}},"2":{"start":{"line":2,"column":0},"end":{"line":2,"column":38}},"3":{"start":{"line":10,"column":0},"end":{"line":23,"column":1}},"4":{"start":{"line":10,"column":26},"end":{"line":10,"column":61}},"5":{"start":{"line":11,"column":2},"end":{"line":22,"column":3}},"6":{"start":{"line":12,"column":4},"end":{"line":12,"column":35}},"7":{"start":{"line":14,"column":4},"end":{"line":21,"column":6}},"8":{"start":{"line":23,"column":0},"end":{"line":23,"column":1}},"9":{"start":{"line":10,"column":13},"end":{"line":23,"column":1}}},"fnMap":{"1":{"name":"(anonymous_3)","line":10,"loc":{"start":{"line":10,"column":0},"end":{"line":null,"column":-1}}},"2":{"name":"(anonymous_5)","line":11,"loc":{"start":{"line":11,"column":2},"end":{"line":null,"column":-1}}}},"branchMap":{},"s":{"1":3,"2":3,"3":4,"4":4,"5":3,"6":1,"7":1,"8":3,"9":3},"b":{},"f":{"1":4,"2":1},"code":["import * as React from 'react';","const styles = require('./Icon.scss');","","export interface IconPropsType {","  glyph: string;","  height?: string;","  width?: string;","}","","export class Icon extends React.Component<IconPropsType, any> {","  render() {","    const glyph = this.props.glyph;","","    return (","      <svg","        className={styles.base}","        height={this.props.height}","        width={this.props.width}","        dangerouslySetInnerHTML={{__html: '<use xlink:href=\"' + glyph + '\"></use>'}}","      />","    );","  }","}",""],"l":{"1":3,"2":3,"10":4,"11":3,"12":1,"14":1,"23":3}},
   "/path/to/src/components/navbar/Navbar.tsx":{"path":"/path/to/src/components/navbar/Navbar.tsx","statementMap":{"1":{"start":{"line":1,"column":0},"end":{"line":1,"column":31}},"2":{"start":{"line":2,"column":0},"end":{"line":2,"column":44}},"3":{"start":{"line":3,"column":0},"end":{"line":3,"column":40}},"4":{"start":{"line":4,"column":0},"end":{"line":4,"column":49}},"5":{"start":{"line":5,"column":0},"end":{"line":5,"column":52}},"6":{"start":{"line":7,"column":0},"end":{"line":16,"column":2}},"7":{"start":{"line":7,"column":21},"end":{"line":16,"column":1}},"8":{"start":{"line":18,"column":0},"end":{"line":null,"column":-1}}},"fnMap":{"1":{"name":"(anonymous_1)","line":7,"loc":{"start":{"line":7,"column":15},"end":{"line":7,"column":20}}}},"branchMap":{},"s":{"1":1,"2":1,"3":1,"4":1,"5":1,"6":1,"7":1,"8":1},"b":{},"f":{"1":1},"code":["import * as React from 'react';","import usesStyles from 'helpers/usesStyles';","const styles = require('./Navbar.scss');","import MobileNavbar from './mobile/MobileNavbar';","import DesktopNavbar from './desktop/DesktopNavbar';","","const Navbar = () => (","  <div>","    <div styleName=\"desktop\">","      <DesktopNavbar/>","    </div>","    <div styleName=\"mobile\">","      <MobileNavbar/>","    </div>","  </div>",");","","export default usesStyles(styles, Navbar);",""],"l":{"1":1,"2":1,"3":1,"4":1,"5":1,"7":1,"18":1}},
@@ -42,7 +44,7 @@ describe('karma-remapped-coverage-reporter', function() {
 
     it('should work', function() {
       logs = [];
-      checkCoverage(testJson, testThresholds, testLog, testBasePath);
+      checkCoverage(testJson, testThresholds, testLog, testBasePath, reporters);
       expect(logs.length).to.equal(13);
     });
 
@@ -63,7 +65,7 @@ describe('karma-remapped-coverage-reporter', function() {
         }
       };
       logs = [];
-      const result = checkCoverage(testJson, easyThresholds, testLog, testBasePath);
+      const result = checkCoverage(testJson, easyThresholds, testLog, testBasePath, reporters);
       expect(result).to.equal(0);
       expect(logs.length).to.equal(0);
     });
@@ -85,7 +87,7 @@ describe('karma-remapped-coverage-reporter', function() {
         }
       };
       logs = [];
-      const result = checkCoverage(testJson, hardThresholds, testLog, testBasePath);
+      const result = checkCoverage(testJson, hardThresholds, testLog, testBasePath, reporters);
       expect(result).to.equal(1);
       expect(logs.length).to.equal(7);
     });
