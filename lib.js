@@ -25,9 +25,8 @@ const defaultThresholds = {
 };
 
 const checkCoverage = function (
-  json, thresholds = defaultThresholds, log = console.log, basePath, reporters
+  json, thresholds, log, basePath, reporters
 ) {
-
   let failed = false;
 
   const checkThreshold = function(threshold, summary) {
@@ -85,7 +84,7 @@ const checkCoverage = function (
       + chalk.bold(type)
       + '\n'
     );
-    if (reporters.includes('teamcity')) {
+    if (reporters.indexOf('teamcity') !== -1) {
       const message = 'Low Coverage: ' + filename + ' ' + value + '% of ' + expected + '% ' + type;
       log("##teamcity[buildProblem description='" + message + "' identity='lowCodeCoverage']\n")
     }

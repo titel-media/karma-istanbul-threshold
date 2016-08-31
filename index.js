@@ -75,7 +75,7 @@ var KarmaIstanbulThresholdReporter = function (baseReporterDecorator, config) {
     } else {
       var watcher = chokidar.watch(config.istanbulThresholdReporter.src);
 
-      watcher.on('add', (path, stats) => {
+      watcher.on('add', function(path, stats) {
         watcher.close();
         self.parseResults();
       });
