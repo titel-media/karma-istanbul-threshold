@@ -50,7 +50,7 @@ var KarmaIstanbulThresholdReporter = function (baseReporterDecorator, config) {
     const exitCode = checkCoverage(
       json,
       self.write.bind(self),
-      config
+      config.istanbulThresholdReporter
     );
     self.write('\n');
 
