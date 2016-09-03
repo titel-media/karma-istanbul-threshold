@@ -30,7 +30,7 @@ const checkCoverage = function (
   let failed = false;
 
   const checkThreshold = function(threshold, summary) {
-    var result = { failed: false };
+    const result = { failed: false };
 
     // Check for no threshold
     if (!threshold) {
@@ -55,7 +55,7 @@ const checkCoverage = function (
   const checkThresholds = function(thresholds, summary) {
     return TYPES.map(function(type) {
       // If the threshold is a number use it, otherwise lookup the threshold type
-      var threshold = typeof thresholds === 'number' ? thresholds : thresholds && thresholds[type];
+      const threshold = typeof thresholds === 'number' ? thresholds : thresholds && thresholds[type];
       return checkThreshold(threshold, summary[type]);
     });
   };
@@ -75,15 +75,17 @@ const checkCoverage = function (
       filename = filename.join('/');
     }
 
-
-    log(
+    if (reporters.indexOf('text') !== -1) {
+      log(
         chalk.red.bold('Low Coverage: ')
-      + filename + ' '
-      + chalk.bold(value + '%') + ' of '
-      + chalk.bold(expected + '% ')
-      + chalk.bold(type)
-      + '\n'
-    );
+        + filename + ' '
+        + chalk.bold(value + '%') + ' of '
+        + chalk.bold(expected + '% ')
+        + chalk.bold(type)
+        + '\n'
+      );
+    }
+
     if (reporters.indexOf('teamcity') !== -1) {
       const message = 'Low Coverage: ' + filename + ' ' + value + '% of ' + expected + '% ' + type;
       log("##teamcity[buildProblem description='" + message + "' identity='lowCodeCoverage']\n")
@@ -91,13 +93,13 @@ const checkCoverage = function (
   };
 
   const checkFailures = function(thresholds, coverage) {
-    var summary = TYPES.map(function(type) {
+    const summary = TYPES.map(function(type) {
       return { type: type };
     });
 
     // If there are global thresholds check overall coverage
     if (thresholds.global) {
-      var global = checkThresholds(thresholds.global, utils.summarizeCoverage(coverage));
+      const global = checkThresholds(thresholds.global, utils.summarizeCoverage(coverage));
       // Inject into summary
       summary.map(function(metric, i) {
         metric.global = global[i];
@@ -111,7 +113,7 @@ const checkCoverage = function (
     if (thresholds.each) {
       _.each(coverage, function(fileCoverage, filename) {
         // Check failures for a file
-        var each = checkThresholds(
+        const each = checkThresholds(
           thresholds.each,
           utils.summarizeFileCoverage(fileCoverage)
         );

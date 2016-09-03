@@ -41,7 +41,8 @@ Add the plugin, reporter and reporter configuration in your `karma.conf.js`.
   istanbulThresholdReporter: {
     src: 'path/to/coverage-report.json',
     basePath: path.resolve(__dirname, 'path/to/source'),
-    reporters: ['teamcity'],
+    reporters: ['text'], // use 'text' reporter to get text reports like in the screenshot 
+    //reporters: ['teamcity'],  // use 'teamcity' reporter to generate output for teamcity
     thresholds: {
       global: {
         statements: 90,
