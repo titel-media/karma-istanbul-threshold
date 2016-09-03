@@ -6,6 +6,7 @@ const fs = require('fs');
 const istanbul = require('istanbul');
 const utils = require('istanbul/lib/object-utils');
 const path = require('path');
+const minimatch = require('minimatch');
 
 const TYPES = ['lines', 'statements', 'functions', 'branches'];
 
@@ -139,7 +140,7 @@ const checkCoverage = function (
   // filter config.excludes
   _.forEach(excludes, function (exclude) {
     _.forEach(json, function (value, key) {
-      if (_.startsWith(key, path.join(basePath, exclude).replace('//', '/'))) {
+      if (minimatch(key, path.join(basePath, exclude).replace('//', '/'))) {
         delete(json[key]);
       }
     });

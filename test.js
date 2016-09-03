@@ -58,7 +58,7 @@ describe('karma-remapped-coverage-reporter', function() {
         checkCoverage(testJson, testLog, {
           thresholds: testThresholds,
           basePath: testBasePath,
-          excludes: ['components/navbar/desktop'],
+          excludes: ['components/navbar/desktop/**/*.tsx'],
         });
         expect(logs.length).to.equal(9);
       });
