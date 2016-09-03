@@ -16,6 +16,7 @@ var KarmaIstanbulThresholdReporter = function (baseReporterDecorator, config) {
   _.defaults(config.istanbulThresholdReporter, {
     src: null,
     basePath: null,
+    reporters: [],
     thresholds: {
       global: {
         statements: 0,
@@ -49,7 +50,8 @@ var KarmaIstanbulThresholdReporter = function (baseReporterDecorator, config) {
       json,
       config.istanbulThresholdReporter.thresholds,
       self.write.bind(self),
-      config.istanbulThresholdReporter.basePath
+      config.istanbulThresholdReporter.basePath,
+      config.istanbulThresholdReporter.reporters
     );
     self.write('\n');
 
@@ -78,10 +80,10 @@ var KarmaIstanbulThresholdReporter = function (baseReporterDecorator, config) {
 
       var watcher = chokidar.watch(config.istanbulThresholdReporter.src);
 
-      watcher.on('change', (path, stats) => {
+      watcher.on('change', function() {
         onSourceReady();
       });
-      watcher.on('add', (path, stats) => {
+      watcher.on('add', function() {
         onSourceReady();
       });
 
