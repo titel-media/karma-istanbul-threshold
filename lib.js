@@ -25,8 +25,16 @@ const defaultThresholds = {
 };
 
 const checkCoverage = function (
-  json, thresholds, log, basePath, reporters
+  json, log, config
 ) {
+  const thresholds = _.assign({}, defaultThresholds, config.thresholds);
+  const basePath = config.basePath || '';
+  const reporters = config.reporters || ['text'];
+  const excludes = config.excludes || [];
+  const colors = config.colors !== false;
+
+  chalk.enabled = colors;
+
   let failed = false;
 
   const checkThreshold = function(threshold, summary) {
@@ -127,6 +135,15 @@ const checkCoverage = function (
 
     return summary;
   };
+
+  // filter config.excludes
+  _.forEach(excludes, function (exclude) {
+    _.forEach(json, function (value, key) {
+      if (_.startsWith(key, path.join(basePath, exclude).replace('//', '/'))) {
+        delete(json[key]);
+      }
+    });
+  });
 
   const collector = new istanbul.Collector();
   collector.add(json);

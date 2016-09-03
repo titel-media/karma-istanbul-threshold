@@ -17,6 +17,7 @@ var KarmaIstanbulThresholdReporter = function (baseReporterDecorator, config) {
     src: null,
     basePath: null,
     reporters: [],
+    excludes: [],
     thresholds: {
       global: {
         statements: 0,
@@ -48,10 +49,8 @@ var KarmaIstanbulThresholdReporter = function (baseReporterDecorator, config) {
     self.write('\n');
     const exitCode = checkCoverage(
       json,
-      config.istanbulThresholdReporter.thresholds,
       self.write.bind(self),
-      config.istanbulThresholdReporter.basePath,
-      config.istanbulThresholdReporter.reporters
+      config
     );
     self.write('\n');
 

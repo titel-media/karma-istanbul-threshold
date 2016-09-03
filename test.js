@@ -44,8 +44,48 @@ describe('karma-remapped-coverage-reporter', function() {
 
     it('should work', function() {
       logs = [];
-      checkCoverage(testJson, testThresholds, testLog, testBasePath, reporters);
+      checkCoverage(testJson, testLog, {
+        thresholds: testThresholds,
+        basePath: testBasePath,
+      });
       expect(logs.length).to.equal(13);
+    });
+
+
+    describe('config.excludes', function() {
+      it('should exclude files', function() {
+        logs = [];
+        checkCoverage(testJson, testLog, {
+          thresholds: testThresholds,
+          basePath: testBasePath,
+          excludes: ['components/navbar/desktop'],
+        });
+        expect(logs.length).to.equal(9);
+      });
+    });
+
+    describe('config.reporters', function() {
+      it('should support text reporter', function() {
+        logs = [];
+        checkCoverage(testJson, testLog, {
+          thresholds: testThresholds,
+          reporters: ['text'],
+          colors: false,
+        });
+        expect(logs.length).to.equal(9);
+        expect(logs[0].startsWith('Low Coverage: GLOBAL 77.03% of 100% statements')).to.equal(true);
+      });
+
+      it('should support teamcity reporter', function() {
+        logs = [];
+        checkCoverage(testJson, testLog, {
+          thresholds: testThresholds,
+          reporters: ['teamcity'],
+          colors: false,
+        });
+        expect(logs.length).to.equal(9);
+        expect(logs[0].startsWith('##teamcity[buildProblem description=')).to.equal(true);
+      });
     });
 
     it('should return 0 on success', function() {
@@ -65,7 +105,10 @@ describe('karma-remapped-coverage-reporter', function() {
         }
       };
       logs = [];
-      const result = checkCoverage(testJson, easyThresholds, testLog, testBasePath, reporters);
+      const result = checkCoverage(testJson, testLog, {
+          thresholds: easyThresholds,
+          basePath: testBasePath,
+        });
       expect(result).to.equal(0);
       expect(logs.length).to.equal(0);
     });
@@ -87,7 +130,10 @@ describe('karma-remapped-coverage-reporter', function() {
         }
       };
       logs = [];
-      const result = checkCoverage(testJson, hardThresholds, testLog, testBasePath, reporters);
+      const result = checkCoverage(testJson, testLog, {
+        thresholds: hardThresholds,
+        basePath: testBasePath,
+      });
       expect(result).to.equal(1);
       expect(logs.length).to.equal(7);
     });

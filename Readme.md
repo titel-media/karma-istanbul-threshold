@@ -43,6 +43,9 @@ Add the plugin, reporter and reporter configuration in your `karma.conf.js`.
     basePath: path.resolve(__dirname, 'path/to/source'),
     reporters: ['text'], // use 'text' reporter to get text reports like in the screenshot 
     //reporters: ['teamcity'],  // use 'teamcity' reporter to generate output for teamcity
+    excludes: [
+      'some/module/*.ts' // will exclude .ts files in `path/to/source/some/module`
+    ],
     thresholds: {
       global: {
         statements: 90,
