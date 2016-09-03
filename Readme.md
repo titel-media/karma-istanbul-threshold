@@ -86,6 +86,7 @@ Add the plugin, reporter and reporter configuration in your `karma.conf.js`.
   istanbulThresholdReporter: {
     src: 'tmp/coverage/coverage-mapped.json',
     basePath: path.resolve(__dirname, 'path/to/source'),
+    reporters: ['text'], 
     thresholds: {
       global: {
         statements: 90,
