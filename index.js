@@ -3,7 +3,6 @@
 const chalk = require('chalk');
 const _ = require('lodash');
 const fs = require('fs');
-const istanbul = require('istanbul');
 const checkCoverage = require('./lib').checkCoverage;
 const chokidar = require('chokidar');
 
@@ -71,18 +70,26 @@ var KarmaIstanbulThresholdReporter = function (baseReporterDecorator, config) {
           ' Skipping threshold test') + '\n');
       self.reportFinished();
     } else {
+      const onSourceReady = function () {
+        watcher.close();
+        clearTimeout(self.waitForSourceTimeout);
+        self.parseResults();
+      };
+
       var watcher = chokidar.watch(config.istanbulThresholdReporter.src);
 
+      watcher.on('change', (path, stats) => {
+        onSourceReady();
+      });
       watcher.on('add', (path, stats) => {
-        watcher.close();
-        self.parseResults();
+        onSourceReady();
       });
 
-      setTimeout(function () {
+      self.waitForSourceTimeout = setTimeout(function () {
         self.write(chalk.red('\nWaiting for remapped coverage source timed out…\n'));
         watcher.close();
         self.reportFinished();
-      }, 5000);
+      }, 15000);
     }
   };
 
