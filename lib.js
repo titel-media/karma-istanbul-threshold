@@ -69,6 +69,16 @@ const checkCoverage = function (
     });
   };
 
+  const formatFilename = function(filename) {
+    if (!filename) {
+      return filename;
+    }
+
+    let pathComponents = filename.split(/[\/\\]/);
+    pathComponents[pathComponents.length - 1] = chalk.yellow(_.last(pathComponents));
+    return pathComponents.join('/');
+  }
+
   const recordFailure = function (scope, type, value, filename) {
     failed = true;
     const expected = thresholds[scope][type];
@@ -77,17 +87,10 @@ const checkCoverage = function (
     }
     filename = scope === 'global' ? 'GLOBAL' : filename;
 
-    // make filename bold
-    if (filename) {
-      filename = filename.split('/');
-      filename[filename.length - 1] = chalk.yellow(_.last(filename));
-      filename = filename.join('/');
-    }
-
     if (reporters.indexOf('text') !== -1) {
       log(
         chalk.red.bold('Low Coverage: ')
-        + filename + ' '
+        + formatFilename(filename) + ' '
         + chalk.bold(value + '%') + ' of '
         + chalk.bold(expected + '% ')
         + chalk.bold(type)
